@@ -1,15 +1,15 @@
 import { Meeting } from "./meetings";
-
+import { Queue } from 'queue-typescript';
 export class Session {
     protected meetings = new Queue<Meeting>();
     protected hasHappened = false;
-    protected sessionId: string;
+    protected sessionId: number;
     protected dateTime: Date;
     protected currentDuration: number;
     protected expectedDuration: number;
     protected maxDurationOverflow: number;
 
-    constructor(sessionId: string, dateTime: Date, expectedDuration: number, maxDurationOverflow: number) {
+    constructor(sessionId: number, dateTime: Date, expectedDuration: number, maxDurationOverflow: number) {
         this.sessionId = sessionId;
         this.dateTime = dateTime;
         this.expectedDuration = expectedDuration;
@@ -38,22 +38,36 @@ export class Session {
 
     /**
      * removeMeetingById
-     * TODO 
-     * the queue does not have iteration ...
      */
-    public removeMeetingById(id: string) {
-
+    public removeMeetingById(id: number) {
+        for (let meeting of this.meetings) {
+            if (meeting.getMeetingId() == id) {
+                this.meetings.remove(meeting);
+                return;
+            }
+        }
+        console.error("Remove meeting by id: such meeting not found with id: ", id);
     }
 
     /**
      * removeLastMeeting
      */
     public removeLastMeeting() {
-        if (this.meetings.size() > 0) {
+        if (this.meetings.length > 0) {
             this.meetings.dequeue();
         } else {
-            throw console.error("Cannot remove meetings from an empty session queue!");
+            throw console.error("Cannot remove meetings from an empty session queue.");
         }
+    }
+
+    public editMeetingById(id: number, newMeeting: Meeting) {
+        for (let meeting of this.meetings) {
+            if (meeting.getMeetingId() == id) {
+                this.meetings.insert(newMeeting, meeting, true);
+                return;
+            }
+        }
+        console.error("Edit meeting by id: such meeting not found with id: ", id);
     }
 
     public getMeetings() {

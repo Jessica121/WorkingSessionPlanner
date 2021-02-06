@@ -1,5 +1,3 @@
-import { internals } from "rx-core";
-
 export class Meeting {
     protected duration: number;
     protected startTime?: Date;
@@ -7,10 +5,10 @@ export class Meeting {
     protected link?: string;
     protected title: string;
     protected author: string;     // TODO: a class ?
-    protected meetingId: string;      // TODO: format? 
-    protected sessionId: string; 
+    protected meetingId: number;
+    protected sessionId: number; 
 
-    public constructor(duration: number, title: string, author: string, meetingId: string, sessionId: string) {
+    public constructor(duration: number, title: string, author: string, meetingId: number, sessionId: number) {
         this.duration = duration;
         this.title = title;
         this.author = author;
